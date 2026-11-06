@@ -48,18 +48,23 @@ float snow_layer(vec2 p, float cell_size, float speed, float radius, float seed)
         + column * 11.0;
     vec2 cell = floor(q);
     float random = random_cell(cell + seed);
+    if (random > clamp(forge_snow_density / 100.0, 0.0, 1.0)) return 0.0;
     float spread = random_cell(cell.yx + seed + 17.0);
     float flutter = fract(random * 13.17 + spread * 7.91);
     // Keep each flake inside its moving cell so gusts never clip or teleport it.
     vec2 center = vec2(0.27 + 0.46 * random, 0.12 + 0.76 * spread);
+    float flake_radius = radius * mix(0.6, 1.45, flutter);
+    float outer_radius = flake_radius + 0.6;
+    // Almost every pixel misses the flake; skip flutter and shading there.
+    if (abs((fract(q).y - center.y) * cell_size) >= outer_radius) return 0.0;
     center.x += (0.055 + 0.075 * flutter)
               * sin(time * (0.4 + 0.55 * random) + spread * 6.283185);
     vec2 flake = (fract(q) - center) * cell_size;
     flake.x *= mix(0.82, 1.18, flutter);
-    float flake_radius = radius * mix(0.6, 1.45, flutter);
+    if (dot(flake, flake) >= outer_radius * outer_radius) return 0.0;
     float coverage = 1.0 - smoothstep(flake_radius - 0.6, flake_radius + 0.6, length(flake));
     float opacity = mix(0.45, 1.0, fract(random * 23.0 + spread * 17.0));
-    return coverage * opacity * step(random, clamp(forge_snow_density / 100.0, 0.0, 1.0));
+    return coverage * opacity;
 }
 
 // Value noise and its analytic slope shade powder without extra texture samples.
@@ -96,12 +101,21 @@ void main() {
     #if defined(NO_ALPHA)
     color.a = 1.0;
     #endif
-    float progress = clamp(window_age / max(forge_snow_fill_time, 1.0), 0.0, 1.0);
-    float mound = 10.0 * sin(p.x / 91.0 + 0.7) + 5.0 * sin(p.x / 37.0 + 2.2);
-    float surface = mix(geo_size.y + 2.0, -2.0, progress)
-                  + mound * sin(progress * 3.14159265);
-    float bank = step(0.5, forge_snow_accumulation) * smoothstep(-0.8, 0.8, p.y - surface);
-    if (bank < 1.0) {
+    float surface = geo_size.y + 2.0;
+    float bank = 0.0;
+    if (forge_snow_accumulation >= 0.5) {
+        float progress = clamp(window_age / max(forge_snow_fill_time, 1.0), 0.0, 1.0);
+        if (progress >= 1.0) {
+            surface = -2.0;
+            bank = 1.0;
+        } else {
+            float mound = 10.0 * sin(p.x / 91.0 + 0.7) + 5.0 * sin(p.x / 37.0 + 2.2);
+            surface = mix(geo_size.y + 2.0, -2.0, progress)
+                    + mound * sin(progress * 3.14159265);
+            bank = smoothstep(-0.8, 0.8, p.y - surface);
+        }
+    }
+    if (bank < 1.0 && forge_snow_density > 0.0) {
         float size = clamp(forge_snow_size / 100.0, 0.5, 2.0);
         float flakes = snow_layer(p, 29.0 * size, 24.0, 1.0 * size, 3.0) * 0.45;
         flakes += snow_layer(p, 49.0 * size, 43.0, 1.8 * size, 37.0) * 0.7;
@@ -123,7 +137,10 @@ void main() {
         snow = mix(vec3(0.96, 0.98, 1.0), snow, 0.35);
         float depth = max(p.y - surface, 0.0);
         snow *= mix(vec3(0.84, 0.91, 0.97), vec3(1.0), smoothstep(0.0, 17.0, depth));
-        float glint = pow(crystals.x, 8.0) * smoothstep(0.7, 1.0, light);
+        float sparkle = crystals.x * crystals.x;
+        sparkle *= sparkle;
+        sparkle *= sparkle;
+        float glint = sparkle * smoothstep(0.7, 1.0, light);
         snow = clamp(snow + glint * 0.014, 0.0, 1.0);
         color.rgb = mix(color.rgb, snow * color.a, bank);
     }
