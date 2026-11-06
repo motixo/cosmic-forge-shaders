@@ -1,7 +1,7 @@
 # COSMIC Forge Shaders
 
 Glass effects for **COSMIC Forge**: Crystal, Mica, Aero, Liquid Glass, Minecraft Glass,
-Void, Ember, Snow and the definition for COSMIC's native Frosted Glass. This is the former `cosmic-crystal` repository, renamed with
+Void, Ember, Snow, Fluted Glass, Hammered Glass, Chord Glass, Cyberspace and the definition for COSMIC's native Frosted Glass. This is the former `cosmic-crystal` repository, renamed with
 its history and releases intact.
 
 [Install COSMIC Forge](https://github.com/motixo/cosmic-forge#install) with the
@@ -23,6 +23,10 @@ retained in [v0.8.0](https://github.com/motixo/cosmic-forge-shaders/tree/v0.8.0)
 - `shaders/void.frag`: an infinity mirror with window parallax and soft light lines.
 - `shaders/ember.frag`: animated flames with independent background opacity.
 - `shaders/snow.frag`: drifting snow and optional accumulation on each window.
+- `shaders/fluted-glass.frag`: vertical glass grooves with adjustable spacing and refraction.
+- `shaders/hammered-glass.frag`: rounded hammered relief.
+- `shaders/chord-glass.frag`: fine vertical glass threads.
+- `shaders/cyberspace.frag`: animated digital contours from the actual backdrop.
 - `shaders/glass.frag`: neutral generic glass template with independent blur.
 - `effects/*.json`: additional glass definitions and overrides for the release pack.
 - `examples/`: an importable Prism pack and a separate JSON + `.frag` example.

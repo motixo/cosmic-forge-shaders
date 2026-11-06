@@ -1,5 +1,12 @@
 # Changelog
 
+## glass-v10 — 2026-11-07
+
+- Add **Fluted Glass**, **Hammered Glass** and **Chord Glass** with adjustable detail and refraction.
+- Add **Cyberspace**, with animated digital contours based on the actual backdrop.
+- Optimize **Snow** and **Ember** rendering.
+- Use Forge **0.12.2** for the shared **Noise** control.
+
 ## glass-v9 — 2026-10-30
 
 ### Void: automatic monitor geometry
