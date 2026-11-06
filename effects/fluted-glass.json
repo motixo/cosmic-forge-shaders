@@ -1,0 +1,73 @@
+{
+  "id": "fluted-glass",
+  "name": "Fluted Glass",
+  "tagline": "Light flowing through ribbed glass.",
+  "description": "Vertical glass grooves bend and soften the backdrop, with fine highlights along each ridge.",
+  "controls": [
+    {
+      "key": "forge_fluted_blur",
+      "label": "Blur",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 55,
+      "unit": "%"
+    },
+    {
+      "key": "forge_fluted_spacing",
+      "label": "Groove spacing",
+      "type": "integer",
+      "min": 8,
+      "max": 160,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "key": "forge_fluted_refraction",
+      "label": "Refraction",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 75,
+      "unit": "%"
+    },
+    {
+      "key": "forge_fluted_highlights",
+      "label": "Highlights",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "key": "forge_fluted_color",
+      "label": "Theme color",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "key": "alpha_map",
+      "label": "Opacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%",
+      "target": "theme"
+    }
+  ],
+  "shader": {
+    "base": "glass",
+    "uniforms": {
+      "forge_blur": "forge_fluted_blur",
+      "forge_fluted_spacing": "forge_fluted_spacing",
+      "forge_fluted_refraction": "forge_fluted_refraction",
+      "forge_fluted_highlights": "forge_fluted_highlights",
+      "forge_fluted_color": "forge_fluted_color"
+    }
+  }
+}
