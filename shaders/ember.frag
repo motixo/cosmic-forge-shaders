@@ -49,10 +49,17 @@ float noise_at(vec2 p) {
 float flame_noise(vec2 p) {
     float value = 0.0;
     float amplitude = 1.0;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
         value += noise_at(p) * amplitude;
         p *= 2.0;
         amplitude *= 0.5;
+    }
+    // Fine noise matters most in faint flames; otherwise retain its mean brightness.
+    if (value < 0.25) {
+        value += noise_at(p) * amplitude;
+        value += noise_at(p * 2.0) * amplitude * 0.5;
+    } else {
+        value += 0.09375;
     }
     return value / 1.9375;
 }
@@ -77,26 +84,28 @@ void main() {
     #endif
     color.rgb = mix(color.rgb, theme_tint * color.a,
                     clamp(forge_ember_background / 100.0, 0.0, 1.0));
-    // Surface coordinates keep flames upright on both native and nested outputs.
-    vec2 pos = vec2(p.x, geo_size.y - p.y) / max(geo_size.x, 1.0);
-    pos *= 100.0 / max(forge_ember_scale, 25.0);
-    pos.y -= time * 0.3125;
-    float noise_value = max(flame_noise(pos * 10.0), 0.001);
-    float gradient = g.y;
-    float first = smoothstep(0.0, noise_value, gradient);
-    float second = smoothstep(0.0, noise_value, gradient - 0.2);
-    float third = smoothstep(0.0, noise_value, gradient - 0.4);
-    vec3 bright = vec3(1.0, 0.65, 0.1);
-    vec3 dark = vec3(1.0, 0.0, 0.15);
-    float theme_mix = clamp(forge_ember_color / 100.0, 0.0, 1.0);
-    bright = mix(bright, theme_accent, theme_mix);
-    dark = mix(dark, theme_accent * 0.28, theme_mix);
-    float outer = first - second;
-    float middle = second - third;
-    vec3 flame = mix(bright, dark, outer);
-    flame = mix(flame, mix(bright, dark, 0.5), middle);
-    float flame_alpha = first * mix(0.72, 0.22, outer) * clamp(forge_ember_strength / 100.0, 0.0, 1.0);
-    color.rgb = mix(color.rgb, flame * color.a, flame_alpha);
+    if (forge_ember_strength > 0.0) {
+        // Surface coordinates keep flames upright on both native and nested outputs.
+        vec2 pos = vec2(p.x, geo_size.y - p.y) / max(geo_size.x, 1.0);
+        pos *= 100.0 / max(forge_ember_scale, 25.0);
+        pos.y -= time * 0.3125;
+        float noise_value = max(flame_noise(pos * 10.0), 0.001);
+        float gradient = g.y;
+        float first = smoothstep(0.0, noise_value, gradient);
+        float second = smoothstep(0.0, noise_value, gradient - 0.2);
+        float third = smoothstep(0.0, noise_value, gradient - 0.4);
+        vec3 bright = vec3(1.0, 0.65, 0.1);
+        vec3 dark = vec3(1.0, 0.0, 0.15);
+        float theme_mix = clamp(forge_ember_color / 100.0, 0.0, 1.0);
+        bright = mix(bright, theme_accent, theme_mix);
+        dark = mix(dark, theme_accent * 0.28, theme_mix);
+        float outer = first - second;
+        float middle = second - third;
+        vec3 flame = mix(bright, dark, outer);
+        flame = mix(flame, mix(bright, dark, 0.5), middle);
+        float flame_alpha = first * mix(0.72, 0.22, outer) * clamp(forge_ember_strength / 100.0, 0.0, 1.0);
+        color.rgb = mix(color.rgb, flame * color.a, flame_alpha);
+    }
     color *= mask * alpha;
     #if defined(DEBUG_FLAGS)
     if (tint == 1.0) color = vec4(0.0, 0.2, 0.0, 0.2) + color * 0.8;
