@@ -1,0 +1,73 @@
+{
+  "id": "hammered-glass",
+  "name": "Hammered Glass",
+  "tagline": "Soft dents, shifting reflections.",
+  "description": "Rounded, uneven dimples bend light like hand-hammered glass.",
+  "controls": [
+    {
+      "key": "forge_hammered_blur",
+      "label": "Blur",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "unit": "%"
+    },
+    {
+      "key": "forge_hammered_size",
+      "label": "Texture size",
+      "type": "integer",
+      "min": 2,
+      "max": 72,
+      "default": 9,
+      "unit": "px"
+    },
+    {
+      "key": "forge_hammered_refraction",
+      "label": "Refraction",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 65,
+      "unit": "%"
+    },
+    {
+      "key": "forge_hammered_texture",
+      "label": "Texture",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 60,
+      "unit": "%"
+    },
+    {
+      "key": "forge_hammered_color",
+      "label": "Theme color",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "key": "alpha_map",
+      "label": "Opacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%",
+      "target": "theme"
+    }
+  ],
+  "shader": {
+    "base": "glass",
+    "uniforms": {
+      "forge_blur": "forge_hammered_blur",
+      "forge_hammered_size": "forge_hammered_size",
+      "forge_hammered_refraction": "forge_hammered_refraction",
+      "forge_hammered_texture": "forge_hammered_texture",
+      "forge_hammered_color": "forge_hammered_color"
+    }
+  }
+}
