@@ -1,0 +1,84 @@
+{
+  "id": "cyberspace",
+  "name": "Cyberspace",
+  "tagline": "Your desktop, reconstructed in light.",
+  "description": "The backdrop breaks into luminous contours and fragments inside a digital space. Turn Animation off for a still view.",
+  "controls": [
+    {
+      "key": "forge_cyber_blur",
+      "label": "Blur",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "key": "forge_cyber_strength",
+      "label": "Effect strength",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 95,
+      "unit": "%"
+    },
+    {
+      "key": "forge_cyber_size",
+      "label": "Detail size",
+      "type": "integer",
+      "min": 3,
+      "max": 32,
+      "default": 9,
+      "unit": "px"
+    },
+    {
+      "key": "forge_cyber_depth",
+      "label": "Depth",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 55,
+      "unit": "%"
+    },
+    {
+      "key": "forge_cyber_glow",
+      "label": "Glow",
+      "type": "integer",
+      "min": 0,
+      "max": 200,
+      "default": 75,
+      "unit": "%"
+    },
+    {
+      "key": "forge_cyber_color",
+      "label": "Theme color",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "key": "alpha_map",
+      "label": "Opacity",
+      "target": "theme",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%"
+    }
+  ],
+  "shader": {
+    "base": "glass",
+    "animated": true,
+    "uniforms": {
+      "forge_blur": "forge_cyber_blur",
+      "forge_cyber_strength": "forge_cyber_strength",
+      "forge_cyber_size": "forge_cyber_size",
+      "forge_cyber_depth": "forge_cyber_depth",
+      "forge_cyber_glow": "forge_cyber_glow",
+      "forge_cyber_color": "forge_cyber_color"
+    }
+  }
+}
