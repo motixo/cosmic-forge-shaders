@@ -1,5 +1,10 @@
 # Changelog
 
+## glass-v11 — 2026-11-08
+
+- Add **Rain Glass** with animated raindrops and adjustable intensity, size, speed and blur.
+- Use **Engine 0.6.3** for smooth speed changes and idle rendering at zero intensity.
+
 ## glass-v10 — 2026-11-07
 
 - Add **Fluted Glass**, **Hammered Glass** and **Chord Glass** with adjustable detail and refraction.

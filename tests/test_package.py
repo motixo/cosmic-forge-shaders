@@ -40,7 +40,10 @@ class PublisherTests(unittest.TestCase):
     def test_official_bundle_contains_all_glass_shader_sources(self):
         pack = publisher.bundle(5)
         self.assertEqual(pack['revision'], 5)
-        self.assertEqual([e['id'] for e in pack['effects']], ['frosted', 'crystal', 'mica', 'aero', 'liquid-glass', 'minecraft-glass', 'void', 'ember', 'snow', 'fluted-glass', 'hammered-glass', 'chord-glass', 'cyberspace'])
+        self.assertEqual([e['id'] for e in pack['effects']], [
+            'frosted', 'crystal', 'mica', 'aero', 'liquid-glass', 'minecraft-glass', 'void', 'ember', 'snow',
+            'fluted-glass', 'hammered-glass', 'chord-glass', 'cyberspace', 'rain-glass',
+        ])
         for effect in pack['effects'][1:]:
             self.assertEqual(effect['shader']['source'], (ROOT / 'shaders' / (effect['id'] + '.frag')).read_text())
 

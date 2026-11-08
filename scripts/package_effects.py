@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFICIAL_ORDER = ['frosted', 'crystal', 'mica', 'aero', 'liquid-glass', 'minecraft-glass', 'void', 'ember', 'snow',
-                  'fluted-glass', 'hammered-glass', 'chord-glass', 'cyberspace']
+                  'fluted-glass', 'hammered-glass', 'chord-glass', 'cyberspace', 'rain-glass']
 
 
 def bundle(revision, catalog=None, pack_id='cosmic-glass', shaders=None):

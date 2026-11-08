@@ -1,0 +1,64 @@
+{
+  "id": "rain-glass",
+  "name": "Rain Glass",
+  "tagline": "Raindrops running down your glass.",
+  "description": "Raindrops cling to the glass, join together and slide down through winding streams of water.",
+  "controls": [
+    {
+      "key": "forge_rain_intensity",
+      "label": "Rain intensity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 72,
+      "unit": "%"
+    },
+    {
+      "key": "forge_rain_size",
+      "label": "Drop size",
+      "type": "integer",
+      "min": 4,
+      "max": 26,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "key": "forge_rain_speed",
+      "label": "Drop speed",
+      "type": "integer",
+      "min": 25,
+      "max": 300,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "key": "forge_rain_blur",
+      "label": "Blur",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "key": "alpha_map",
+      "label": "Opacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%",
+      "target": "theme"
+    }
+  ],
+  "shader": {
+    "base": "glass",
+    "animated": true,
+    "uniforms": {
+      "forge_blur": "forge_rain_blur",
+      "forge_animation_intensity_percent": "forge_rain_intensity",
+      "forge_rain_size": "forge_rain_size",
+      "forge_animation_speed_percent": "forge_rain_speed"
+    }
+  }
+}
