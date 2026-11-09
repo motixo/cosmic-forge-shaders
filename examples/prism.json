@@ -6,14 +6,14 @@
     {
       "id": "prism",
       "name": "Prism Glass",
-      "tagline": "A small community glass example.",
-      "description": "An Aero-based shader with an adjustable color shift. Edit this example to make your own effect.",
+      "tagline": "Aero glass with a color shift.",
+      "description": "Blend the glass colors toward a channel rotation with Prism shift.",
       "preview": "aero",
       "controls": [
         {
           "key": "forge_prism_amount",
           "label": "Prism shift",
-          "description": "Rotate the transmitted color channels.",
+          "description": "At 0% the colors stay as they are. At 100%, RGB becomes BRG.",
           "type": "integer",
           "min": 0,
           "max": 100,
@@ -23,7 +23,6 @@
         {
           "key": "aero_blur_amount",
           "label": "Blur",
-          "description": "Keep the background clear or soften it into glass.",
           "type": "integer",
           "min": 0,
           "max": 100,
@@ -33,7 +32,6 @@
         {
           "key": "aero_color",
           "label": "Theme color",
-          "description": "How much of your system color comes through.",
           "type": "integer",
           "min": 0,
           "max": 100,
@@ -43,7 +41,6 @@
         {
           "key": "aero_reflections",
           "label": "Reflections",
-          "description": "Adjust the diagonal sheen and the glass rim.",
           "type": "integer",
           "min": 0,
           "max": 100,
@@ -54,7 +51,7 @@
           "key": "alpha_map",
           "target": "theme",
           "label": "Opacity",
-          "description": "Shared across Frosted Glass, Crystal and Aero.",
+          "description": "Shared COSMIC opacity for all effects.",
           "type": "integer",
           "min": 0,
           "max": 100,
