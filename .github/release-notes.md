@@ -1,2 +1,1 @@
-- Add **Rain Glass** with animated raindrops and adjustable intensity, size, speed and blur.
-- Use **Engine 0.6.3** for smooth speed changes and idle rendering at zero intensity.
+- Add **Pearlescent Glass** with a soft color shift as you move the window and adjustable sheen, iridescence and blur.

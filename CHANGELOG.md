@@ -1,5 +1,9 @@
 # Changelog
 
+## glass-v12 — 2026-11-10
+
+- Add **Pearlescent Glass** with a soft color shift as you move the window and adjustable sheen, iridescence and blur.
+
 ## glass-v11 — 2026-11-08
 
 - Add **Rain Glass** with animated raindrops and adjustable intensity, size, speed and blur.

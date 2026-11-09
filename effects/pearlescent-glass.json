@@ -1,0 +1,54 @@
+{
+  "id": "pearlescent-glass",
+  "name": "Pearlescent Glass",
+  "tagline": "Soft nacre highlights that shift with your window.",
+  "description": "A translucent mother-of-pearl sheen with pastel colors that shift as you move the window.",
+  "controls": [
+    {
+      "key": "forge_pearl_blur",
+      "label": "Blur",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 45,
+      "unit": "%"
+    },
+    {
+      "key": "forge_pearl_sheen",
+      "label": "Sheen",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "unit": "%"
+    },
+    {
+      "key": "forge_pearl_iridescence",
+      "label": "Iridescence",
+      "description": "Sets the strength of the color shift. Zero gives a neutral pearl sheen.",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 85,
+      "unit": "%"
+    },
+    {
+      "key": "alpha_map",
+      "target": "theme",
+      "label": "Opacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%"
+    }
+  ],
+  "shader": {
+    "base": "glass",
+    "uniforms": {
+      "forge_blur": "forge_pearl_blur",
+      "forge_pearl_sheen": "forge_pearl_sheen",
+      "forge_pearl_iridescence": "forge_pearl_iridescence"
+    }
+  }
+}
