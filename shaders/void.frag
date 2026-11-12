@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Infinity mirror; output-local geometry follows motion without idle animation.
 #version 100

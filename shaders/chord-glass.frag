@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Procedural textured glass; surface detail stays sharp above the blurred backdrop.
 #version 100

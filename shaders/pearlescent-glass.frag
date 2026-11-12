@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // A thin-film sheen over a single backdrop sample.
 #version 100

@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Minecraft-inspired connected glass with sparse, sharp pixel reflections.
 // Geometry clipping follows COSMIC's clipped_surface.frag.

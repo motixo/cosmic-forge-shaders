@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Repeated cylindrical glass lenses, with diffusion along the grooves.
 #version 100

@@ -1,7 +1,10 @@
+// forge-backdrop: blurred-only
+// forge-effect-map: ember-v1
 // Flame/noise adapted from trinketMage, https://www.shadertoy.com/view/3tcBzH
 // Reference copy: https://github.com/mrdoob/three.js/blob/master/examples/webgpu_shadertoy.html
 // Original effect: CC-BY-NC-SA (as credited by Burn My Windows).
 // Local Forge adaptation; glass clipping follows COSMIC's clipped_surface.frag.
+// forge-animation-idle: zero forge_ember_strength
 #version 100
 //_DEFINES_
 #if defined(EXTERNAL)
@@ -64,6 +67,38 @@ float flame_noise(vec2 p) {
     return value / 1.9375;
 }
 
+vec4 ember_flame(vec2 g, vec2 p) {
+    // Surface coordinates keep flames upright on both native and nested outputs.
+    vec2 pos = vec2(p.x, geo_size.y - p.y) / max(geo_size.x, 1.0);
+    pos *= 100.0 / max(forge_ember_scale, 25.0);
+    pos.y -= time * 0.3125;
+    float noise_value = max(flame_noise(pos * 10.0), 0.001);
+    float gradient = g.y;
+    float first = smoothstep(0.0, noise_value, gradient);
+    float second = smoothstep(0.0, noise_value, gradient - 0.2);
+    float third = smoothstep(0.0, noise_value, gradient - 0.4);
+    vec3 bright = vec3(1.0, 0.65, 0.1);
+    vec3 dark = vec3(1.0, 0.0, 0.15);
+    float theme_mix = clamp(forge_ember_color / 100.0, 0.0, 1.0);
+    bright = mix(bright, theme_accent, theme_mix);
+    dark = mix(dark, theme_accent * 0.28, theme_mix);
+    float outer = first - second;
+    float middle = second - third;
+    vec3 flame = mix(bright, dark, mix(outer, 0.5, middle));
+    float flame_alpha = first * mix(0.72, 0.22, outer) * clamp(forge_ember_strength / 100.0, 0.0, 1.0);
+    return vec4(flame * flame_alpha, flame_alpha);
+}
+
+#ifdef FORGE_EFFECT_MAP_PASS
+#undef main
+void main() {
+    gl_FragColor = ember_flame(v_coords, v_coords * geo_size);
+}
+#else
+#ifdef FORGE_EFFECT_MAP_SAMPLE
+uniform highp sampler2D forge_effect_map_tex;
+uniform float forge_effect_map_enabled;
+#endif
 void main() {
     if (alpha <= 0.0) discard;
     vec2 g = (input_to_geo * vec3(v_coords, 1.0)).xy;
@@ -85,26 +120,16 @@ void main() {
     color.rgb = mix(color.rgb, theme_tint * color.a,
                     clamp(forge_ember_background / 100.0, 0.0, 1.0));
     if (forge_ember_strength > 0.0) {
-        // Surface coordinates keep flames upright on both native and nested outputs.
-        vec2 pos = vec2(p.x, geo_size.y - p.y) / max(geo_size.x, 1.0);
-        pos *= 100.0 / max(forge_ember_scale, 25.0);
-        pos.y -= time * 0.3125;
-        float noise_value = max(flame_noise(pos * 10.0), 0.001);
-        float gradient = g.y;
-        float first = smoothstep(0.0, noise_value, gradient);
-        float second = smoothstep(0.0, noise_value, gradient - 0.2);
-        float third = smoothstep(0.0, noise_value, gradient - 0.4);
-        vec3 bright = vec3(1.0, 0.65, 0.1);
-        vec3 dark = vec3(1.0, 0.0, 0.15);
-        float theme_mix = clamp(forge_ember_color / 100.0, 0.0, 1.0);
-        bright = mix(bright, theme_accent, theme_mix);
-        dark = mix(dark, theme_accent * 0.28, theme_mix);
-        float outer = first - second;
-        float middle = second - third;
-        vec3 flame = mix(bright, dark, outer);
-        flame = mix(flame, mix(bright, dark, 0.5), middle);
-        float flame_alpha = first * mix(0.72, 0.22, outer) * clamp(forge_ember_strength / 100.0, 0.0, 1.0);
-        color.rgb = mix(color.rgb, flame * color.a, flame_alpha);
+        vec4 flame;
+#ifdef FORGE_EFFECT_MAP_SAMPLE
+        if (forge_effect_map_enabled > 0.5) {
+            flame = texture2D(forge_effect_map_tex, g);
+        } else
+#endif
+        {
+            flame = ember_flame(g, p);
+        }
+        color.rgb = color.rgb * (1.0 - flame.a) + flame.rgb * color.a;
     }
     color *= mask * alpha;
     #if defined(DEBUG_FLAGS)
@@ -112,3 +137,5 @@ void main() {
     #endif
     gl_FragColor = color;
 }
+#endif
+// forge-effect-map-end

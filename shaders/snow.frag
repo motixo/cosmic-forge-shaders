@@ -1,6 +1,8 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Falling snow with an independent accumulating snowbank for each window.
 // Geometry clipping follows COSMIC's clipped_surface.frag.
+// forge-animation-idle: accumulation forge_snow_accumulation forge_snow_fill_time forge_snow_density
 #version 100
 //_DEFINES_
 #if defined(EXTERNAL)
@@ -49,6 +51,11 @@ float snow_layer(vec2 p, float cell_size, float speed, float radius, float seed)
     vec2 cell = floor(q);
     float random = random_cell(cell + seed);
     if (random > clamp(forge_snow_density / 100.0, 0.0, 1.0)) return 0.0;
+    float local_x = fract(q.x);
+    // The flake center is constrained by its random value and the largest sway.
+    float center_x = 0.27 + 0.46 * random;
+    float bound = 0.13 + (radius * 1.45 + 0.6) / (0.82 * cell_size) + 0.001;
+    if (abs(local_x - center_x) > bound) return 0.0;
     float spread = random_cell(cell.yx + seed + 17.0);
     float flutter = fract(random * 13.17 + spread * 7.91);
     // Keep each flake inside its moving cell so gusts never clip or teleport it.
@@ -109,10 +116,17 @@ void main() {
             surface = -2.0;
             bank = 1.0;
         } else {
-            float mound = 10.0 * sin(p.x / 91.0 + 0.7) + 5.0 * sin(p.x / 37.0 + 2.2);
-            surface = mix(geo_size.y + 2.0, -2.0, progress)
-                    + mound * sin(progress * 3.14159265);
-            bank = smoothstep(-0.8, 0.8, p.y - surface);
+            float flat_surface = mix(geo_size.y + 2.0, -2.0, progress);
+            float wave = sin(progress * 3.14159265);
+            float margin = 15.0 * abs(wave) + 0.01;
+            surface = flat_surface;
+            if (p.y >= flat_surface + margin + 17.0) {
+                bank = 1.0;
+            } else if (p.y > flat_surface - margin - 0.8) {
+                float mound = 10.0 * sin(p.x / 91.0 + 0.7) + 5.0 * sin(p.x / 37.0 + 2.2);
+                surface += mound * wave;
+                bank = smoothstep(-0.8, 0.8, p.y - surface);
+            }
         }
     }
     if (bank < 1.0 && forge_snow_density > 0.0) {

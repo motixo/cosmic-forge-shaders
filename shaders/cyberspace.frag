@@ -1,5 +1,7 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Backdrop-driven digital contours and analytic wireframe walls; no ray marching.
+// forge-animation-idle: zero forge_cyber_strength
 #version 100
 //_DEFINES_
 #if defined(EXTERNAL)
@@ -37,11 +39,8 @@ float hash21(vec2 p) {
     return fract((h.x + h.y) * h.z);
 }
 
-vec3 backdrop_at(vec2 p, vec2 sample_point) {
-    sample_point = clamp(sample_point, vec2(0.5), max(geo_size - 0.5, vec2(0.5)));
-    vec2 inset = uv_per_pixel * 0.5;
-    vec2 uv = clamp(v_coords + (sample_point - p) * uv_per_pixel, inset, 1.0 - inset);
-    vec4 color = texture2D(tex, uv);
+vec3 backdrop_at(vec2 uv, vec2 inset) {
+    vec4 color = texture2D(tex, clamp(uv, inset, 1.0 - inset));
     return clamp(color.rgb / max(color.a, 0.0001), 0.0, 1.0);
 }
 
@@ -76,6 +75,9 @@ void main() {
         float band = floor(p.y / 12.0);
         float glitch = step(0.985, hash21(vec2(band, floor(time * 5.0))))
             * sin(time * 7.0 + band) * size * 0.7;
+        vec2 uv_origin = v_coords - p * uv_per_pixel;
+        vec2 inset = uv_per_pixel * 0.5;
+        vec2 sample_limit = max(geo_size - 0.5, vec2(0.5));
         float light = 0.0;
         float halo = 0.0;
         float surface_luma = 0.0;
@@ -89,9 +91,11 @@ void main() {
             vec2 local = fract(projected / cell_size);
             vec2 point = (cell + 0.5) * cell_size;
             // Each layer derives its contours from the actual backdrop.
-            vec3 center = backdrop_at(p, point);
-            vec3 left = backdrop_at(p, point - vec2(cell_size, 0.0));
-            vec3 above = backdrop_at(p, point - vec2(0.0, cell_size));
+            vec2 center_uv = uv_origin + clamp(point, vec2(0.5), sample_limit) * uv_per_pixel;
+            vec2 neighbor_uv = uv_origin + clamp(point - cell_size, vec2(0.5), sample_limit) * uv_per_pixel;
+            vec3 center = backdrop_at(center_uv, inset);
+            vec3 left = backdrop_at(vec2(neighbor_uv.x, center_uv.y), inset);
+            vec3 above = backdrop_at(vec2(center_uv.x, neighbor_uv.y), inset);
             vec2 contrast = vec2(dot(abs(center - left), vec3(0.3333)),
                 dot(abs(center - above), vec3(0.3333)));
             contrast = smoothstep(vec2(0.012), vec2(0.12), contrast);

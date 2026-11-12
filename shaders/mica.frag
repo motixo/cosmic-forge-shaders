@@ -1,3 +1,4 @@
+// forge-backdrop: blurred-only
 // SPDX-License-Identifier: GPL-3.0-only
 // Mica reconstruction: diffuse wallpaper chroma over a neutral opaque surface.
 #version 100
