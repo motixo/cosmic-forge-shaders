@@ -1,1 +1,2 @@
-- Add **Pearlescent Glass** with a soft color shift as you move the window and adjustable sheen, iridescence and blur.
+- Reduce rendering work in Rain Glass, Snow, Ember, and Cyberspace.
+- Pair this pack with Engine 0.6.5 for the full performance improvements.
